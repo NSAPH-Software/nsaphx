@@ -1,6 +1,6 @@
 import unittest
 
-from pycausalgps.base.utils import nested_get
+from nsaphx.base.utils import nested_get
 
 class TestUtils(unittest.TestCase):
     def test_nested_get(self):
