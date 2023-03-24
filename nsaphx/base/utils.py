@@ -1,6 +1,7 @@
 import random
 import numpy as np
 import pandas as pd
+import os
 
 
 from nsaphx.log import LOGGER
@@ -39,3 +40,9 @@ def human_readible_size(nbytes):
         i += 1
 
     return f"{nbytes:.2f} {suffixes[i]}"
+
+
+def check_instruction_keys(keys, instruction):
+    missing_keys = [key for key in keys if key not in instruction.keys()]
+    if len(missing_keys) > 0:
+        raise ValueError(f"Missing keys: {missing_keys} in the instruction.")
