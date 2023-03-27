@@ -7,6 +7,7 @@ import os
 from nsaphx.base.utils import human_readible_size
 import re
 import pandas as pd
+import warnings
 
 class DataClass(ABC):
 
@@ -15,27 +16,61 @@ class DataClass(ABC):
         pass
 
     @abstractmethod
-    def apply(self, instruction):
-        pass
-
-    @abstractmethod
-    def summary(self):
-        pass
-
-    @abstractmethod
     def check_data(self):      
         pass    
 
-    @abstractmethod
     def apply(self, instruction):
-        pass
+        # Generates a new lazy node and put's it in the data.base.
+        if not self.computed:
+            warnings.warn("The data node has not been computed yet. ")
+            return
+        
+        plugin_name = instruction.get("plugin_name")
+        plugin_function = PLUGIN_MAP.get(plugin_name)
 
+        if plugin_function is not None:
+            data_node = DataNode(self.hash_value, instruction,
+                                 db_path=self.db_path)
+            if data_node.hash_value in self.descendant_hash:
+                data_node = self.db.get_value(data_node.hash_value)
+                print(f"Data node was retrieved from database.")
+            else:
+                data_node.input_data = self.input_data
+                self.descendant_hash.append(data_node.hash_value)
+                if self.hash_by_type.get(plugin_name) is None:
+                    self.hash_by_type[plugin_name] = [data_node.hash_value]
+                else:
+                    self.hash_by_type[plugin_name].append(data_node.hash_value)
+                self.db.set_value(data_node.hash_value, data_node)
+                self.db.set_value(self.hash_value, self)
+            return data_node
+        else:
+            raise ValueError(f"Plugin {plugin_name} not found.")
 
-
+    def summary(self):
+        print(f"Data node hash: {self.hash_value}")
+        print(f"    Data:")
+        for key, value in self.input_data["path"].items():
+            print(f"        {key}: {value}")
+        if (self.input_data["d_index"] is None): 
+            index_len  = None
+        else:
+            index_len = len(self.input_data["d_index"])
+        print(f"    Index filtering length: {index_len}")
+        print(f"    Number of decendent nodes: {len(self.descendant_hash)}")
+        print(f"    Hash by type: ")
+        if len(self.descendant_hash) > 0:
+            for key, value in self.hash_by_type.items():
+                if len(value) > 1:
+                    print(f" "*8 + f"{key}")
+                    for v in value:
+                        print(f" "*12 + f"{v}")
+        
 class MainDataNode(DataClass):
     def __init__(self, project_params, db_path):
         self.project_params = project_params
         self.input_data = None
+        self.computed = True
         self._add_hash()
         self._create_data_attribute()
         self.descendant_hash = []
@@ -44,14 +79,12 @@ class MainDataNode(DataClass):
         self._connect_to_database()
 
     def _create_data_attribute(self):
-        exposure_path = self.project_params.get("data").get("exposure_path")
-        outcome_path = self.project_params.get("data").get("outcome_path")
-        covariate_path = self.project_params.get("data").get("covariate_path")
-        self.data = {"path":{"outcome_path": outcome_path,
-                             "exposure_path": exposure_path,
-                             "covariate_path": covariate_path},
-                     "d_index": None, 
-                     "d_generated": dict()}
+        data_path_keys = ["exposure_path", "outcome_path", "covariate_path"]
+        self.input_data = {"path": {}, "d_index": None}
+        for key in data_path_keys:
+            value = self.project_params.get("data").get(key)
+            self.input_data["path"][key] = value
+
         
     def _add_hash(self):
         hash_string = self.project_params["hash_value"] + "MainDataNode"
@@ -61,16 +94,9 @@ class MainDataNode(DataClass):
         except Exception as e:
             print(e) 
 
-    def summary(self):
-        print(f"Main data node hash: {self.hash_value}")
-        print(f"    Data: {self.data}")
-        print(f"    All child hash: {self.descendant_hash}")
-        print(f"    Hash by type: {self.hash_by_type}")
-
-
     def data_summary(self):
         self.check_data()
-        for key, value in self.data["path"].items():
+        for key, value in self.input_data["path"].items():
             print(f"{re.sub('_path', '', key)}:")
             key_data = pd.read_csv(value)
             print(f"    Number of rows: {key_data.shape[0]}")
@@ -83,16 +109,14 @@ class MainDataNode(DataClass):
         
         if data_name is None:
             data = {}
-            for key, value in self.data["path"].items():
+            for key, value in self.input_data["path"].items():
                 _key = f"{re.sub('_path', '', key)}"
                 loaded_data = pd.read_csv(value)
                 data[_key] = loaded_data
         else:
-            pass
+            raise NotImplementedError("Accessing data by name is not implemented yet.")
 
         return data
-
-
 
     def _connect_to_database(self):
         if self.db_path is None:
@@ -104,38 +128,17 @@ class MainDataNode(DataClass):
         return self.db.get_value(hash_value)
     
     def check_data(self):
-        for key, value in self.data["path"].items():
+        for key, value in self.input_data["path"].items():
             print(f"Working on {key} : {value} ...")
             file_exist = os.path.exists(value)
             print(f"    File accessible: {file_exist}")
             if file_exist:
                 file_size = human_readible_size(os.path.getsize(value))
                 print(f"    File size: {file_size}")
-
-    def apply(self, instruction):
-        # Generates a new lazy node and put's it in the data.base.
-        
-        plugin_name = instruction.get("plugin_name")
-        plugin_function = PLUGIN_MAP.get(plugin_name)
-
-        # First create a new data node
-        # Then apply the plugin function to the data node
-
-        if plugin_function is not None:
-            data_node = DataNode(self.hash_value, instruction,
-                                 db_path=self.db_path)
-            data_node.input_data = self.data
-            self.descendant_hash.append(data_node.hash_value)
-            self.hash_by_type[plugin_name] = data_node.hash_value
-            self.db.set_value(data_node.hash_value, data_node)
-            return data_node
-        else:
-            raise ValueError(f"Plugin {plugin_name} not found.")
         
     def __str__(self):
         return (f"{self.__class__.__name__}(hash_value={self.hash_value}," + 
                 f" db_path={self.db_path})")
-
 
 
 class DataNode(DataClass):
@@ -159,37 +162,10 @@ class DataNode(DataClass):
         
         self.hash_value = hashlib.sha256(
             hash_string.encode('utf-8')).hexdigest()
-   
-    def apply(self, instruction):
-        # Generates a new lazy node and put's it in the data.base.
-        if not self.computed:
-            Warning("The data node has not been computed yet. ")
-            return
-
-        plugin_name = instruction.get("plugin_name")
-        plugin_function = PLUGIN_MAP.get(plugin_name)
-
-        # First create a new data node
-        # Then apply the plugin function to the data node
-
-        if plugin_function is not None:
-            data_node = DataNode(self.hash_value, instruction,
-                                 db_path=self.db_path)
-            data_node.input_data = self.output_data
-            self.descendant_hash.append(data_node.hash_value)
-            self.hash_by_type[plugin_name] = data_node.hash_value
-            self.db.set_value(data_node.hash_value, data_node)
-            return data_node
-        else:
-            raise ValueError(f"Plugin {plugin_name} not found.")
-        
-
-    def summary(self):
-        pass
 
     def compute(self):
         if self.computed is False:
-            
+    
             # compute
             self.computed = True
             plugin_name = self.instruction.get("plugin_name")
@@ -203,7 +179,6 @@ class DataNode(DataClass):
             else:
                 raise ValueError(f"Plugin {plugin_name} not found.")
             
-
         else:
             print(f"The data node has already been computed." +
                   f"Run .reset() to reset the node.")
@@ -224,7 +199,6 @@ class DataNode(DataClass):
 
     def update_node_on_db(self):
         self.db.set_value(self.hash_value, self)
-    
     
     def check_data(self):
         for key, value in self.input_data["path"].items():
