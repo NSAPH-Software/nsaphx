@@ -5,6 +5,8 @@ from nsaphx.plugin_registery import PLUGIN_MAP
 from nsaphx.database import Database
 import os
 from nsaphx.base.utils import human_readible_size
+import re
+import pandas as pd
 
 class DataClass(ABC):
 
@@ -29,13 +31,14 @@ class DataClass(ABC):
         pass
 
 
+
 class MainDataNode(DataClass):
     def __init__(self, project_params, db_path):
         self.project_params = project_params
         self.input_data = None
         self._add_hash()
         self._create_data_attribute()
-        self.all_child_hash = []
+        self.descendant_hash = []
         self.hash_by_type = dict()
         self.db_path = db_path
         self._connect_to_database()
@@ -59,7 +62,37 @@ class MainDataNode(DataClass):
             print(e) 
 
     def summary(self):
-        pass
+        print(f"Main data node hash: {self.hash_value}")
+        print(f"    Data: {self.data}")
+        print(f"    All child hash: {self.descendant_hash}")
+        print(f"    Hash by type: {self.hash_by_type}")
+
+
+    def data_summary(self):
+        self.check_data()
+        for key, value in self.data["path"].items():
+            print(f"{re.sub('_path', '', key)}:")
+            key_data = pd.read_csv(value)
+            print(f"    Number of rows: {key_data.shape[0]}")
+            print(f"    Number of columns: {key_data.shape[1]}")
+            print(f"    Column names: {key_data.columns.tolist()}")
+            print(f"    First 5 rows:")
+            print(key_data.head())
+
+    def access_data(self, data_name = None):
+        
+        if data_name is None:
+            data = {}
+            for key, value in self.data["path"].items():
+                _key = f"{re.sub('_path', '', key)}"
+                loaded_data = pd.read_csv(value)
+                data[_key] = loaded_data
+        else:
+            pass
+
+        return data
+
+
 
     def _connect_to_database(self):
         if self.db_path is None:
@@ -92,12 +125,17 @@ class MainDataNode(DataClass):
             data_node = DataNode(self.hash_value, instruction,
                                  db_path=self.db_path)
             data_node.input_data = self.data
-            self.all_child_hash.append(data_node.hash_value)
+            self.descendant_hash.append(data_node.hash_value)
             self.hash_by_type[plugin_name] = data_node.hash_value
             self.db.set_value(data_node.hash_value, data_node)
             return data_node
         else:
             raise ValueError(f"Plugin {plugin_name} not found.")
+        
+    def __str__(self):
+        return (f"{self.__class__.__name__}(hash_value={self.hash_value}," + 
+                f" db_path={self.db_path})")
+
 
 
 class DataNode(DataClass):
@@ -109,12 +147,11 @@ class DataNode(DataClass):
         self.parent_node_hash = parent_node_hash
         self.instruction = instruction
         self.db_path = db_path
-        self.all_child_hash = []
+        self.descendant_hash = []
         self.hash_by_type = dict()
         self._connect_to_database()
         self._update_input_data()
         self._add_hash()
-
 
     def _add_hash(self):
         hash_string = (self.parent_node_hash + 
@@ -122,8 +159,7 @@ class DataNode(DataClass):
         
         self.hash_value = hashlib.sha256(
             hash_string.encode('utf-8')).hexdigest()
-
-        
+   
     def apply(self, instruction):
         # Generates a new lazy node and put's it in the data.base.
         if not self.computed:
@@ -140,7 +176,7 @@ class DataNode(DataClass):
             data_node = DataNode(self.hash_value, instruction,
                                  db_path=self.db_path)
             data_node.input_data = self.output_data
-            self.all_child_hash.append(data_node.hash_value)
+            self.descendant_hash.append(data_node.hash_value)
             self.hash_by_type[plugin_name] = data_node.hash_value
             self.db.set_value(data_node.hash_value, data_node)
             return data_node
@@ -161,6 +197,7 @@ class DataNode(DataClass):
             
             if plugin_function is not None:
                 output_data = plugin_function(self.input_data, self.instruction)
+                # sanity check to see if output data has required keys.
                 self.output_data = output_data
                 self.update_node_on_db()
             else:
@@ -197,6 +234,12 @@ class DataNode(DataClass):
             if file_exist:
                 file_size = human_readible_size(os.path.getsize(value))
                 print(f"    File size: {file_size}")
+
+    def access_input_data(self):
+        pass
+
+    def access_output_data(self):
+        pass
 
 
 
