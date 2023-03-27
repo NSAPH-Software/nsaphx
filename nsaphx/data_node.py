@@ -61,16 +61,22 @@ class DataClass(ABC):
         print(f"    Hash by type: ")
         if len(self.descendant_hash) > 0:
             for key, value in self.hash_by_type.items():
-                if len(value) > 1:
+                if len(value) > 0:
                     print(f" "*8 + f"{key}")
                     for v in value:
                         print(f" "*12 + f"{v}")
+
+    def __str__(self):
+        return (f"{self.__class__.__name__}(hash_value={self.hash_value}," + 
+                f" db_path={self.db_path})")
         
 class MainDataNode(DataClass):
     def __init__(self, project_params, db_path):
         self.project_params = project_params
         self.input_data = None
         self.computed = True
+        self.hash_value = None
+        self.node_id = None
         self._add_hash()
         self._create_data_attribute()
         self.descendant_hash = []
@@ -91,6 +97,7 @@ class MainDataNode(DataClass):
         try:            
             self.hash_value =  hashlib.sha256(
                 hash_string.encode('utf-8')).hexdigest()
+            self.node_id = hashlib.shake_256(self.hash_value.encode()).hexdigest(8)
         except Exception as e:
             print(e) 
 
@@ -135,11 +142,14 @@ class MainDataNode(DataClass):
             if file_exist:
                 file_size = human_readible_size(os.path.getsize(value))
                 print(f"    File size: {file_size}")
-        
-    def __str__(self):
-        return (f"{self.__class__.__name__}(hash_value={self.hash_value}," + 
-                f" db_path={self.db_path})")
 
+    def apply_instruction_chain(self, instruction_list):
+        my_node = self
+        for instruction in instruction_list:
+            my_node = my_node.apply(instruction)
+            my_node.compute()
+        return my_node
+        
 
 class DataNode(DataClass):
     def __init__(self, parent_node_hash, instruction, db_path):
@@ -147,6 +157,7 @@ class DataNode(DataClass):
         self.output_data = None
         self.computed = False
         self.hash_value = None
+        self.node_id = None
         self.parent_node_hash = parent_node_hash
         self.instruction = instruction
         self.db_path = db_path
@@ -162,7 +173,7 @@ class DataNode(DataClass):
         
         self.hash_value = hashlib.sha256(
             hash_string.encode('utf-8')).hexdigest()
-
+        self.node_id = hashlib.shake_256(self.hash_value.encode()).hexdigest(8)
     def compute(self):
         if self.computed is False:
     

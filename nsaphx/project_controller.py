@@ -221,3 +221,4 @@ class ProjectController:
 
     def __repr__(self) -> str:
         return f"ProjectController(db_path='{self.db_path}')"
+    
