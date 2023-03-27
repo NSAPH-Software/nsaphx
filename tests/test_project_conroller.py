@@ -2,7 +2,7 @@ import unittest
 import os
 import shutil
 import yaml
-from pycausalgps.project_controller import ProjectController
+from nsaphx.project_controller import ProjectController
 
 class TestProjectController(unittest.TestCase):
 

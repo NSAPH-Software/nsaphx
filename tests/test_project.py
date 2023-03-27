@@ -1,6 +1,6 @@
 import unittest
 
-from pycausalgps.project import Project
+from nsaphx.project import Project
 
 class TestGPS(unittest.TestCase):
 
