@@ -120,11 +120,12 @@ class ProjectController:
         if p_obj.hash_value in c_pr:
             print("The project object retrieved from the database.")
             p_obj = self.db.get_value(p_obj.hash_value)
+            return p_obj
         else:
             print("The project does not exist in the database. "
                   + "Please create the project first.")
-    
-    
+            return None
+        
     def remove_project(self, project_name):
         """
         Remove a project from the database, the list of projects, and the

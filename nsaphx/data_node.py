@@ -35,7 +35,7 @@ class DataClass(ABC):
                 data_node = self.db.get_value(data_node.hash_value)
                 print(f"Data node was retrieved from database.")
             else:
-                data_node.input_data = self.input_data
+                data_node.input_data = self.output_data
                 self.descendant_hash.append(data_node.hash_value)
                 if self.hash_by_type.get(plugin_name) is None:
                     self.hash_by_type[plugin_name] = [data_node.hash_value]
@@ -74,6 +74,7 @@ class MainDataNode(DataClass):
     def __init__(self, project_params, db_path):
         self.project_params = project_params
         self.input_data = None
+        self.output_data = None
         self.computed = True
         self.hash_value = None
         self.node_id = None
@@ -90,7 +91,7 @@ class MainDataNode(DataClass):
         for key in data_path_keys:
             value = self.project_params.get("data").get(key)
             self.input_data["path"][key] = value
-
+        self.output_data = self.input_data
         
     def _add_hash(self):
         hash_string = self.project_params["hash_value"] + "MainDataNode"
@@ -200,7 +201,9 @@ class DataNode(DataClass):
 
 
     def _update_input_data(self):
-        pass
+        parent_node = self.db.get_value(self.parent_node_hash)
+        self.input_data = parent_node.output_data 
+        self.update_node_on_db()
 
     def _connect_to_database(self):
         if self.db_path is None:
@@ -220,11 +223,37 @@ class DataNode(DataClass):
                 file_size = human_readible_size(os.path.getsize(value))
                 print(f"    File size: {file_size}")
 
-    def access_input_data(self):
-        pass
+    def access_input_data(self, data_name = None):
+        if data_name is None:
+            data = {}
+            for key, value in self.input_data["path"].items():
+                _key = f"{re.sub('_path', '', key)}"
+                loaded_data = pd.read_csv(value)
+                if self.input_data["d_index"] is not None:
+                    selected_data = loaded_data[loaded_data["id"].isin(self.input_data["d_index"])]
+                else:
+                    selected_data = loaded_data
+                data[_key] = selected_data
+        else:
+            raise NotImplementedError("Accessing data by name is not implemented yet.")
 
-    def access_output_data(self):
-        pass
+        return data
+
+    def access_output_data(self, data_name = None):
+        if data_name is None:
+            data = {}
+            for key, value in self.output_data["path"].items():
+                _key = f"{re.sub('_path', '', key)}"
+                loaded_data = pd.read_csv(value)
+                if self.output_data["d_index"] is not None:
+                    selected_data = loaded_data[loaded_data["id"].isin(self.output_data["d_index"])]
+                else:
+                    selected_data = loaded_data
+                data[_key] = selected_data
+        else:
+            raise NotImplementedError("Accessing data by name is not implemented yet.")
+
+        return data
 
 
 

@@ -133,3 +133,4 @@ scripts/*
 notebooks/*
 
 *.db
+*.*DS_Store

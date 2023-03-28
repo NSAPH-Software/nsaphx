@@ -177,15 +177,4 @@ class Project:
         return self.db.get_value(self._main_data_node)
 
 if __name__ == "__main__":
-    project_params = { 'project_id': 20221027,
-                       'name': 'cms_kidney_failure',
-                       'details': {'description': 'Computing the effect of longterm pm2.5 exposure on kidney failure.', 'version': '1.0.0', 'authors': {'name': 'Naeem Khoshnevis', 'email': 'nkhoshnevis@g.harvard.edu'}}, 
-                       'data': {'outcome_path': '/Users/nak443/Documents/Naeem_folder_mac_h/Research_projects/F2022_003_Harvard/p20221104_gps/code_package/pycausalgps/notebooks/project_abc/data/outcome.csv', 
-                                'exposure_path': '/Users/nak443/Documents/Naeem_folder_mac_h/Research_projects/F2022_003_Harvard/p20221104_gps/code_package/pycausalgps/notebooks/project_abc/data/exposure.csv', 
-                                'covariate_path': '/Users/nak443/Documents/Naeem_folder_mac_h/Research_projects/F2022_003_Harvard/p20221104_gps/code_package/pycausalgps/notebooks/project_abc/data/covariate.csv'}}
-
-    current_dir = os.getcwd()
-    db_path = path.join(current_dir, "database.sqlite")
-    print(current_dir)
-    pr = Project(project_params, db_path)
-    #pr.compute_gps( os.path.join(current_dir,"notebooks/project_abc", "gps_params_1.yaml"))
+    pass
