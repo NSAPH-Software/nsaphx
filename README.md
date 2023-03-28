@@ -1,3 +1,4 @@
+[![codecov](https://codecov.io/gh/NSAPH-Software/nsaphx/branch/develop/graph/badge.svg?token=8aSueNmHZN)](https://codecov.io/gh/NSAPH-Software/nsaphx)
 
 # nsaphx
 
