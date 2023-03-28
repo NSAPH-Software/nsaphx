@@ -1,3 +1,10 @@
+"""
+data_node.py
+============
+The core module for the MainDataNode and DataNode classes.
+
+"""
+
 import json
 import hashlib
 from abc import ABC, abstractmethod
@@ -10,6 +17,10 @@ import pandas as pd
 import warnings
 
 class DataClass(ABC):
+    """ DataClass
+    The DataClass is an abstract class for the MainDataNode and DataNode classes.
+    It contains the common attributes and methods for the two classes.
+    """
 
     @abstractmethod
     def _add_hash(self):
@@ -71,6 +82,18 @@ class DataClass(ABC):
                 f" db_path={self.db_path})")
         
 class MainDataNode(DataClass):
+    """ MainDataNode
+    The MainDataNode is the first node in the data pipeline. User can apply 
+    instructions to the MainDataNode to generate a new DataNode. Each project
+    has one MainDataNode object.
+
+    Parameters
+    ----------
+    project_params : dict
+        A dictionary containing the project parameters.
+    db_path : str
+        The path to the database file.
+    """
     def __init__(self, project_params, db_path):
         self.project_params = project_params
         self.input_data = None
@@ -114,6 +137,21 @@ class MainDataNode(DataClass):
             print(key_data.head())
 
     def access_data(self, data_name = None):
+        """access_data
+        Access the data in the data node. If data_name is None, return a
+        dictionary containing all the data. Otherwise, return the data
+        specified by data_name.
+
+        Parameters
+        ----------
+        data_name : str, optional
+            The name of the data to be returned, by default None
+        
+        Returns
+        -------
+        data : dict
+            A dictionary containing the requested data in the data node.
+        """
         
         if data_name is None:
             data = {}
@@ -127,15 +165,22 @@ class MainDataNode(DataClass):
         return data
 
     def _connect_to_database(self):
+        """_connect_to_database
+        Connect to the database.
+        """
         if self.db_path is None:
             raise Exception("No database path provided.")
         
         self.db = Database(self.db_path)
 
     def get_data_node(self, hash_value):
+        # TBD - Maybe is not needed
         return self.db.get_value(hash_value)
     
     def check_data(self):
+        """ check_data 
+        Check if the data files are accessible and print out the file size.
+        """
         for key, value in self.input_data["path"].items():
             print(f"Working on {key} : {value} ...")
             file_exist = os.path.exists(value)
@@ -145,6 +190,10 @@ class MainDataNode(DataClass):
                 print(f"    File size: {file_size}")
 
     def apply_instruction_chain(self, instruction_list):
+        """apply_instruction_chain
+        Apply a list of instructions to the MainDataNode to generate a sequence
+        of new DataNodes.
+        """
         my_node = self
         for instruction in instruction_list:
             my_node = my_node.apply(instruction)
@@ -153,6 +202,46 @@ class MainDataNode(DataClass):
         
 
 class DataNode(DataClass):
+    """DataNode
+    The DataNode is the basic unit in the data pipeline. User can apply 
+    instructions to the DataNode to generate a new DataNode. Each DataNode
+    has a parent DataNode and can have one or more decendant DataNodes.
+
+    Parameters
+    ----------
+    parent_node_hash : str
+        The hash value of the parent DataNode.
+    instruction : dict
+        The instruction to be applied to the node. 
+    db_path : str
+        The path to the database file.
+
+    Attributes
+    ----------
+    input_data : dict
+        The input data of the node.
+    output_data : dict
+        The output data of the node.
+    computed : bool
+        Whether the node has been computed.
+    hash_value : str
+        The hash value of the node.
+    node_id : str
+        The node id of the node (This is a shortened hash value.)
+    parent_node_hash : str
+        The hash value of the parent DataNode (or MainDataNode).
+    instruction : dict
+        The instruction to be applied to the node.
+    db_path : str
+        The path to the database file.
+    descendant_hash : list
+        A list of hash values of the decendant DataNodes.
+    hash_by_type : dict
+        A dictionary containing the hash values of the decendant DataNodes that 
+        is grouped by the type of the DataNode.
+    db : Database
+        The database object.
+    """
     def __init__(self, parent_node_hash, instruction, db_path):
         self.input_data = None
         self.output_data = None
@@ -169,13 +258,21 @@ class DataNode(DataClass):
         self._add_hash()
 
     def _add_hash(self):
+        """_add_hash
+        Add the hash value and node_id to the node.
+        """
         hash_string = (self.parent_node_hash + 
                        json.dumps(self.instruction, sort_keys=True))
         
         self.hash_value = hashlib.sha256(
             hash_string.encode('utf-8')).hexdigest()
         self.node_id = hashlib.shake_256(self.hash_value.encode()).hexdigest(8)
+
     def compute(self):
+        """compute
+        Compute the node. This function will call the plugin function to
+        compute the node and update the node on the database.
+        """
         if self.computed is False:
     
             # compute
@@ -196,25 +293,43 @@ class DataNode(DataClass):
                   f"Run .reset() to reset the node.")
             
     def reset(self):
+        """reset
+        Reset the node. This function will reset the node to the state before
+        it is computed.
+        """
         self.computed = False
-        self.data = self.parent_node.data
-
+        self._update_input_data()
 
     def _update_input_data(self):
+        """_update_input_data
+        Update the input data of the node. This function will get the output
+        data of the parent node and set it as the input data of the node. The 
+        current node will be updated on the database.
+        """
         parent_node = self.db.get_value(self.parent_node_hash)
         self.input_data = parent_node.output_data 
         self.update_node_on_db()
 
     def _connect_to_database(self):
+        """_connect_to_database
+        Connect to the database.
+        """
         if self.db_path is None:
             raise Exception("No database path provided.")
         
         self.db = Database(self.db_path)
 
     def update_node_on_db(self):
+        """update_node_on_db 
+        Update the node on the database.
+        """
         self.db.set_value(self.hash_value, self)
     
     def check_data(self):
+        """check_data
+        Check the data of the node. This function will check if the data
+        files are accessible and print out the file size.
+        """
         for key, value in self.input_data["path"].items():
             print(f"Working on {key} : {value} ...")
             file_exist = os.path.exists(value)
@@ -224,6 +339,16 @@ class DataNode(DataClass):
                 print(f"    File size: {file_size}")
 
     def access_input_data(self, data_name = None):
+        """access_input_data
+        Access the input data of the node. This function will load the data
+        from the data files and return a dictionary containing the data.
+
+        Parameters
+        ----------
+        data_name : str, optional
+            The name of the data to be accessed. If None, all data will be
+            accessed. (default: None)
+        """
         if data_name is None:
             data = {}
             for key, value in self.input_data["path"].items():
@@ -240,13 +365,24 @@ class DataNode(DataClass):
         return data
 
     def access_output_data(self, data_name = None):
+        """access_output_data
+        Access the output data of the node. This function will load the data
+        from the data files and return a dictionary containing the data.
+
+        Parameters
+        ----------
+        data_name : str, optional
+            The name of the data to be accessed. If None, all data will be
+            accessed. (default: None)
+        """
         if data_name is None:
             data = {}
             for key, value in self.output_data["path"].items():
                 _key = f"{re.sub('_path', '', key)}"
                 loaded_data = pd.read_csv(value)
                 if self.output_data["d_index"] is not None:
-                    selected_data = loaded_data[loaded_data["id"].isin(self.output_data["d_index"])]
+                    selected_data = loaded_data[
+                        loaded_data["id"].isin(self.output_data["d_index"])]
                 else:
                     selected_data = loaded_data
                 data[_key] = selected_data

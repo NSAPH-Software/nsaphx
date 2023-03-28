@@ -80,7 +80,6 @@ class Project:
                                 f"under the 'data' field, " \
                                 f"please provide the '{key}' field.")
 
-
     def _connect_to_database(self):
         if self.pr_db_path is None:
             raise Exception("Database is not defined.")
