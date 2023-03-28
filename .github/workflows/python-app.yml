@@ -45,12 +45,15 @@ jobs:
     #     flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
     - name: Test with pytest
       run: |
-        pip install pytest-cov
-        python -X dev -m pytest --pyargs nsaphx --cov --cov-report xml -v
+        pip install coverage
+        coverage run -m pytest tests/
+        coverage report -i
+        coverage xml -i
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v3
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
+        file: ./coverage.xml
         flags: unittests
         name: codecov-umbrella
         fail_ci_if_error: true
