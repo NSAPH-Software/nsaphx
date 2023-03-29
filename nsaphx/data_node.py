@@ -15,6 +15,8 @@ from nsaphx.base.utils import human_readible_size
 import re
 import pandas as pd
 import warnings
+from functools import reduce
+from nsaphx.base.discovery import Graph, Node, print_graph
 
 class DataClass(ABC):
     """ DataClass
@@ -69,8 +71,8 @@ class DataClass(ABC):
             index_len = len(self.input_data["d_index"])
         print(f"    Index filtering length: {index_len}")
         print(f"    Number of decendent nodes: {len(self.descendant_hash)}")
-        print(f"    Hash by type: ")
         if len(self.descendant_hash) > 0:
+            print(f"    Hash by type: ")
             for key, value in self.hash_by_type.items():
                 if len(value) > 0:
                     print(f" "*8 + f"{key}")
@@ -80,6 +82,17 @@ class DataClass(ABC):
     def __str__(self):
         return (f"{self.__class__.__name__}(hash_value={self.hash_value}," + 
                 f" db_path={self.db_path})")
+    
+    def instruction_summary(self):
+        print(f"Data node hash: {self.hash_value}")
+        print(f"    Instruction:")
+        for key, value in self.instruction.items():
+            print(f"        {key}: {value}")
+        input_data_len = len(self.input_data.get("d_index"))
+        output_data_len = len(self.output_data.get("d_index"))
+        print(f"    input data size: {input_data_len}")
+        print(f"    output data size: {output_data_len}")
+        print(f"    computed: {self.computed}")
         
 class MainDataNode(DataClass):
     """ MainDataNode
@@ -114,6 +127,16 @@ class MainDataNode(DataClass):
         for key in data_path_keys:
             value = self.project_params.get("data").get(key)
             self.input_data["path"][key] = value
+        
+        _data = []
+        for _ , path_value in self.input_data.get("path").items():
+             _data.append(pd.read_csv(path_value))
+        merged_df = reduce(lambda left,
+                           right: pd.merge(left, right, on='id'), _data)
+        
+        d_index = merged_df["id"].tolist()
+        self.input_data["d_index"] = d_index
+        
         self.output_data = self.input_data
         
     def _add_hash(self):
@@ -392,6 +415,76 @@ class DataNode(DataClass):
         return data
 
 
+
+    def history(self, detail = False):
+
+        nodes = [self]
+        node = self
+
+        while True:
+            if node.parent_node_hash is None:
+                break
+            else:
+                node = self.db.get_value(node.parent_node_hash)
+                nodes.append(node)    
+            if isinstance(node, MainDataNode):
+                break
+
+        nodes = nodes[::-1]
+
+        if detail:
+            for node in nodes:
+                if isinstance(node, MainDataNode):
+                    print(f"Main data node: {node}")
+                else:
+                    node.instruction_summary()
+        else:
+            for i, node in enumerate(nodes):
+                if i == len(nodes) - 1:
+                    print(f"You are here -> {node}")
+                else:
+                    print(node)
+
+    def create_descendant_graph(self, graph = None):
+        if graph is None:
+            graph = Graph()
+        elif not isinstance(graph, Graph):
+            raise ValueError("graph must be a Graph object.")
+    
+        node_a = None
+        for node in graph.nodes:
+            if node.val == self.hash_value:
+                node_a = node
+                break
+
+        if node_a is None:
+            node_a = Node(val=self.hash_value)
+            graph.add_node(node_a)
+    
+        for descendant_hash in self.descendant_hash:
+            descendant_node = self.db.get_value(descendant_hash)
+            node_b = None
+            for node in graph.nodes:
+                if node.val == descendant_hash:
+                    node_b = node
+                    break
+            if node_b is None:
+                node_b = Node(val=descendant_hash)
+                graph.add_node(node_b)
+            graph.add_connection(node_a, node_b)
+            graph = descendant_node.create_descendant_graph(graph=graph)
+
+    
+        return graph
+
+
+    def decendents(self, detail = False):
+        
+        if detail:
+            pass
+        else:
+            graph = self.create_descendant_graph()
+            graph.print_graph()
 
 
 
