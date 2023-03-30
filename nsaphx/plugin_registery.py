@@ -1,3 +1,9 @@
+"""
+plugin_registery.py
+===================
+The core module for registering plugins.
+"""
+
 from nsaphx.plugins.filter import filter
 
 PLUGIN_MAP = {

@@ -63,6 +63,8 @@
 <li class="toctree-l2"><a class="reference internal" href="#database-py">database.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#project-controller-py">project_controller.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#project-py">project.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#data-node-py">data_node.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#plugin-registery-py">plugin_registery.py</a></li>
 </ul>
 </li>
 </ul>
@@ -344,21 +346,287 @@ data. Other than mandatory keys, the project_params can contain other keys.</p>
 </dd></dl>
 
 </section>
-<span class="target" id="module-nsaphx.data_node"></span><dl class="py class">
+<span class="target" id="module-nsaphx.data_node"></span><section id="data-node-py">
+<h2>data_node.py<a class="headerlink" href="#data-node-py" title="Permalink to this heading"></a></h2>
+<p>The core module for the MainDataNode and DataNode classes.</p>
+<dl class="py class">
 <dt class="sig sig-object py" id="nsaphx.data_node.DataClass">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">nsaphx.data_node.</span></span><span class="sig-name descname"><span class="pre">DataClass</span></span><a class="reference internal" href="_modules/nsaphx/data_node.html#DataClass"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nsaphx.data_node.DataClass" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>The DataClass is an abstract class for the MainDataNode and DataNode classes.
+It contains the common attributes and methods for the two classes.</p>
+</dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="nsaphx.data_node.DataNode">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">nsaphx.data_node.</span></span><span class="sig-name descname"><span class="pre">DataNode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parent_node_hash</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">instruction</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">db_path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nsaphx/data_node.html#DataNode"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nsaphx.data_node.DataNode" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>The DataNode is the basic unit in the data pipeline. User can apply
+instructions to the DataNode to generate a new DataNode. Each DataNode
+has a parent DataNode and can have one or more decendant DataNodes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>parent_node_hash</strong> (<em>str</em>) – The hash value of the parent DataNode.</p></li>
+<li><p><strong>instruction</strong> (<em>dict</em>) – The instruction to be applied to the node.</p></li>
+<li><p><strong>db_path</strong> (<em>str</em>) – The path to the database file.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nsaphx.data_node.DataNode.input_data">
+<span class="sig-name descname"><span class="pre">input_data</span></span><a class="headerlink" href="#nsaphx.data_node.DataNode.input_data" title="Permalink to this definition"></a></dt>
+<dd><p>The input data of the node.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nsaphx.data_node.DataNode.output_data">
+<span class="sig-name descname"><span class="pre">output_data</span></span><a class="headerlink" href="#nsaphx.data_node.DataNode.output_data" title="Permalink to this definition"></a></dt>
+<dd><p>The output data of the node.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nsaphx.data_node.DataNode.computed">
+<span class="sig-name descname"><span class="pre">computed</span></span><a class="headerlink" href="#nsaphx.data_node.DataNode.computed" title="Permalink to this definition"></a></dt>
+<dd><p>Whether the node has been computed.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nsaphx.data_node.DataNode.hash_value">
+<span class="sig-name descname"><span class="pre">hash_value</span></span><a class="headerlink" href="#nsaphx.data_node.DataNode.hash_value" title="Permalink to this definition"></a></dt>
+<dd><p>The hash value of the node.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nsaphx.data_node.DataNode.node_id">
+<span class="sig-name descname"><span class="pre">node_id</span></span><a class="headerlink" href="#nsaphx.data_node.DataNode.node_id" title="Permalink to this definition"></a></dt>
+<dd><p>The node id of the node (This is a shortened hash value.)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nsaphx.data_node.DataNode.parent_node_hash">
+<span class="sig-name descname"><span class="pre">parent_node_hash</span></span><a class="headerlink" href="#nsaphx.data_node.DataNode.parent_node_hash" title="Permalink to this definition"></a></dt>
+<dd><p>The hash value of the parent DataNode (or MainDataNode).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nsaphx.data_node.DataNode.instruction">
+<span class="sig-name descname"><span class="pre">instruction</span></span><a class="headerlink" href="#nsaphx.data_node.DataNode.instruction" title="Permalink to this definition"></a></dt>
+<dd><p>The instruction to be applied to the node.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nsaphx.data_node.DataNode.db_path">
+<span class="sig-name descname"><span class="pre">db_path</span></span><a class="headerlink" href="#nsaphx.data_node.DataNode.db_path" title="Permalink to this definition"></a></dt>
+<dd><p>The path to the database file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nsaphx.data_node.DataNode.descendant_hash">
+<span class="sig-name descname"><span class="pre">descendant_hash</span></span><a class="headerlink" href="#nsaphx.data_node.DataNode.descendant_hash" title="Permalink to this definition"></a></dt>
+<dd><p>A list of hash values of the decendant DataNodes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nsaphx.data_node.DataNode.hash_by_type">
+<span class="sig-name descname"><span class="pre">hash_by_type</span></span><a class="headerlink" href="#nsaphx.data_node.DataNode.hash_by_type" title="Permalink to this definition"></a></dt>
+<dd><p>A dictionary containing the hash values of the decendant DataNodes that
+is grouped by the type of the DataNode.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nsaphx.data_node.DataNode.db">
+<span class="sig-name descname"><span class="pre">db</span></span><a class="headerlink" href="#nsaphx.data_node.DataNode.db" title="Permalink to this definition"></a></dt>
+<dd><p>The database object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#nsaphx.database.Database" title="nsaphx.database.Database">Database</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nsaphx.data_node.DataNode._add_hash">
+<span class="sig-name descname"><span class="pre">_add_hash</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/nsaphx/data_node.html#DataNode._add_hash"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nsaphx.data_node.DataNode._add_hash" title="Permalink to this definition"></a></dt>
+<dd><p>Add the hash value and node_id to the node.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nsaphx.data_node.DataNode._connect_to_database">
+<span class="sig-name descname"><span class="pre">_connect_to_database</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/nsaphx/data_node.html#DataNode._connect_to_database"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nsaphx.data_node.DataNode._connect_to_database" title="Permalink to this definition"></a></dt>
+<dd><p>Connect to the database.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nsaphx.data_node.DataNode._update_input_data">
+<span class="sig-name descname"><span class="pre">_update_input_data</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/nsaphx/data_node.html#DataNode._update_input_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nsaphx.data_node.DataNode._update_input_data" title="Permalink to this definition"></a></dt>
+<dd><p>Update the input data of the node. This function will get the output
+data of the parent node and set it as the input data of the node. The
+current node will be updated on the database.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nsaphx.data_node.DataNode.access_input_data">
+<span class="sig-name descname"><span class="pre">access_input_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nsaphx/data_node.html#DataNode.access_input_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nsaphx.data_node.DataNode.access_input_data" title="Permalink to this definition"></a></dt>
+<dd><p>Access the input data of the node. This function will load the data
+from the data files and return a dictionary containing the data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>data_name</strong> (<em>str</em><em>, </em><em>optional</em>) – The name of the data to be accessed. If None, all data will be
+accessed. (default: None)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nsaphx.data_node.DataNode.access_output_data">
+<span class="sig-name descname"><span class="pre">access_output_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nsaphx/data_node.html#DataNode.access_output_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nsaphx.data_node.DataNode.access_output_data" title="Permalink to this definition"></a></dt>
+<dd><p>Access the output data of the node. This function will load the data
+from the data files and return a dictionary containing the data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>data_name</strong> (<em>str</em><em>, </em><em>optional</em>) – The name of the data to be accessed. If None, all data will be
+accessed. (default: None)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nsaphx.data_node.DataNode.check_data">
+<span class="sig-name descname"><span class="pre">check_data</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/nsaphx/data_node.html#DataNode.check_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nsaphx.data_node.DataNode.check_data" title="Permalink to this definition"></a></dt>
+<dd><p>Check the data of the node. This function will check if the data
+files are accessible and print out the file size.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nsaphx.data_node.DataNode.compute">
+<span class="sig-name descname"><span class="pre">compute</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/nsaphx/data_node.html#DataNode.compute"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nsaphx.data_node.DataNode.compute" title="Permalink to this definition"></a></dt>
+<dd><p>Compute the node. This function will call the plugin function to
+compute the node and update the node on the database.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nsaphx.data_node.DataNode.reset">
+<span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/nsaphx/data_node.html#DataNode.reset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nsaphx.data_node.DataNode.reset" title="Permalink to this definition"></a></dt>
+<dd><p>Reset the node. This function will reset the node to the state before
+it is computed.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nsaphx.data_node.DataNode.update_node_on_db">
+<span class="sig-name descname"><span class="pre">update_node_on_db</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/nsaphx/data_node.html#DataNode.update_node_on_db"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nsaphx.data_node.DataNode.update_node_on_db" title="Permalink to this definition"></a></dt>
+<dd><p>Update the node on the database.</p>
+</dd></dl>
+
+</dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="nsaphx.data_node.MainDataNode">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">nsaphx.data_node.</span></span><span class="sig-name descname"><span class="pre">MainDataNode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">project_params</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">db_path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nsaphx/data_node.html#MainDataNode"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nsaphx.data_node.MainDataNode" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>The MainDataNode is the first node in the data pipeline. User can apply
+instructions to the MainDataNode to generate a new DataNode. Each project
+has one MainDataNode object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>project_params</strong> (<em>dict</em>) – A dictionary containing the project parameters.</p></li>
+<li><p><strong>db_path</strong> (<em>str</em>) – The path to the database file.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="nsaphx.data_node.MainDataNode._connect_to_database">
+<span class="sig-name descname"><span class="pre">_connect_to_database</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/nsaphx/data_node.html#MainDataNode._connect_to_database"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nsaphx.data_node.MainDataNode._connect_to_database" title="Permalink to this definition"></a></dt>
+<dd><p>Connect to the database.</p>
+</dd></dl>
 
+<dl class="py method">
+<dt class="sig sig-object py" id="nsaphx.data_node.MainDataNode.access_data">
+<span class="sig-name descname"><span class="pre">access_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nsaphx/data_node.html#MainDataNode.access_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nsaphx.data_node.MainDataNode.access_data" title="Permalink to this definition"></a></dt>
+<dd><p>Access the data in the data node. If data_name is None, return a
+dictionary containing all the data. Otherwise, return the data
+specified by data_name.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>data_name</strong> (<em>str</em><em>, </em><em>optional</em>) – The name of the data to be returned, by default None</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>data</strong> – A dictionary containing the requested data in the data node.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nsaphx.data_node.MainDataNode.apply_instruction_chain">
+<span class="sig-name descname"><span class="pre">apply_instruction_chain</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">instruction_list</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nsaphx/data_node.html#MainDataNode.apply_instruction_chain"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nsaphx.data_node.MainDataNode.apply_instruction_chain" title="Permalink to this definition"></a></dt>
+<dd><p>Apply a list of instructions to the MainDataNode to generate a sequence
+of new DataNodes.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nsaphx.data_node.MainDataNode.check_data">
+<span class="sig-name descname"><span class="pre">check_data</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/nsaphx/data_node.html#MainDataNode.check_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nsaphx.data_node.MainDataNode.check_data" title="Permalink to this definition"></a></dt>
+<dd><p>Check if the data files are accessible and print out the file size.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<span class="target" id="module-nsaphx.plugin_registery"></span><section id="plugin-registery-py">
+<h2>plugin_registery.py<a class="headerlink" href="#plugin-registery-py" title="Permalink to this heading"></a></h2>
+<p>The core module for registering plugins.</p>
+</section>
 </section>
 
 

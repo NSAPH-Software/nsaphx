@@ -55,7 +55,7 @@ class Project:
         self._check_params()
         self.pr_name = self.project_params.get("name")
         self.pr_id = self.project_params.get("project_id")
-        self.pr_db_path = db_path
+        self.db_path = db_path
         self.hash_value = None
         self.gps_list = list()
         self._add_hash()
@@ -80,12 +80,11 @@ class Project:
                                 f"under the 'data' field, " \
                                 f"please provide the '{key}' field.")
 
-
     def _connect_to_database(self):
-        if self.pr_db_path is None:
+        if self.db_path is None:
             raise Exception("Database is not defined.")
             
-        self.db = Database(self.pr_db_path)
+        self.db = Database(self.db_path)
 
     def ping_data(self):
         # This includes checking if the data is still accessible. 
@@ -98,7 +97,7 @@ class Project:
 
         return (f"Project name: {self.pr_name} \n"
                f"Project id: {self.pr_id} \n"
-               f"Project database: {self.pr_db_path} \n")
+               f"Project database: {self.db_path} \n")
 
 
     def __repr__(self) -> str:
@@ -165,7 +164,7 @@ class Project:
         if self._main_data_node is None:
             # Generate main data node and add to the database.
             main_data_node = MainDataNode(self.project_params,
-                                          db_path=self.pr_db_path)
+                                          db_path=self.db_path)
             self._main_data_node = main_data_node.hash_value
             self.db.set_value(self._main_data_node, main_data_node)
 
