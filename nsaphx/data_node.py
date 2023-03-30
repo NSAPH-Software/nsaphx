@@ -473,10 +473,8 @@ class DataNode(DataClass):
                 graph.add_node(node_b)
             graph.add_connection(node_a, node_b)
             graph = descendant_node.create_descendant_graph(graph=graph)
-
     
         return graph
-
 
     def decendents(self, detail = False):
         

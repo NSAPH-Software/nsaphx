@@ -3,62 +3,16 @@ import os
 import shutil
 import yaml
 from nsaphx.project_controller import ProjectController
+from tests.setup_test_folders import setup_test_folders
 
 class TestProjectController(unittest.TestCase):
 
     def setUp(self):
 
         current_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)))
-        self.test_dir = os.path.join(current_dir,
-                                "test_folder")
-        
-        if os.path.exists(self.test_dir):
-            shutil.rmtree(self.test_dir)
-
-        os.makedirs(self.test_dir)
-
-        self.test_data_dir = os.path.join(current_dir,
-                                          "test_data")
-        
-        if not os.path.exists(self.test_dir):
-            raise Exception("test_folder does not exist")
-        
-        for file in os.listdir(self.test_data_dir):
-            file_path = os.path.join(self.test_data_dir, file)
-            if os.path.isfile(file_path):
-                shutil.copy(file_path, self.test_dir)
-
-
-        # create a project json file. 
-        covariate_path = os.path.join(self.test_dir, "covariate.csv")
-        exposure_path = os.path.join(self.test_dir, "exposure.csv")
-        outcome_path = os.path.join(self.test_dir, "outcome.csv")
-        project_params = {
-            'name': 'cms_lung_failure',
-            'project_id': 20221025,
-            'details': {
-                'description': 'Computing the effect of longterm pm2.5 exposure on lung cancer.',
-                'version': '1.0.0',
-                'authors': {
-                    'name': 'Naeem Khoshnevis',
-                    'email': 'nkhoshnevis@g.harvard.edu'
-                }
-            },
-            'data': {
-                'outcome_path': outcome_path,
-                'exposure_path': exposure_path,
-                'covariate_path': covariate_path
-            }
-        }
-
-        yaml_content = yaml.dump(project_params, default_flow_style=False)
-
-        with open(os.path.join(self.test_dir, "project.yaml"), "w") as f:
-            f.write(yaml_content)
-
+        self.test_dir = setup_test_folders(current_dir, "test_folder")
         self.pc = ProjectController(db_path=os.path.join(self.test_dir,
                                                          "test.db"))
-
 
     def tearDown(self):
         if os.path.exists(self.test_dir):
