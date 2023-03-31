@@ -1,10 +1,25 @@
 nsaphx
 ======
 
+.. image:: https://img.shields.io/pypi/l/nsaphx.svg
+    :target: https://pypi.org/project/nsaphx
+    :alt: licence
+
 .. image:: https://github.com/nsaph-software/nsaphx/workflows/Python\ package/badge.svg?branch=develop&event=push
     :target: https://github.com/nsaph-software/nsaphx/actions
     :alt: Test Status
 
+.. image:: https://img.shields.io/pypi/v/nsaphx.svg
+    :target: https://pypi.org/project/nsaphx
+    :alt: PyPI version
+
+.. image:: https://img.shields.io/github/issues/nsaph-software/nsaphx
+    :target: https://pypi.org/project/nsaphx
+    :alt: issues
+
+.. image:: https://codecov.io/gh/NSAPH-Software/nsaphx/branch/develop/graph/badge.svg?token=8aSueNmHZN 
+    :target: https://codecov.io/gh/NSAPH-Software/nsaphx
+    :alt: codecov
 
 
 *Reproducible Causal Inference Studies*

@@ -32,6 +32,7 @@
           
           <a href="../../index.html" class="icon icon-home">
             nsaphx
+              <img src="../../_static/nsaphx_logo.png" class="logo" alt="Logo"/>
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -104,7 +105,7 @@
 
 
 <div class="viewcode-block" id="ProjectController"><a class="viewcode-back" href="../../modules.html#nsaphx.project_controller.ProjectController">[docs]</a><span class="k">class</span> <span class="nc">ProjectController</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot; ProjectController class   </span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; ProjectController class   </span>
 
 <span class="sd">    The ProjectController class manages the projects. It provides suite of</span>
 <span class="sd">    methods to add, remove, and connect to projects. It also provides a summary</span>
@@ -131,14 +132,14 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_update_project_list</span><span class="p">()</span>
 
 <div class="viewcode-block" id="ProjectController._update_project_list"><a class="viewcode-back" href="../../modules.html#nsaphx.project_controller.ProjectController._update_project_list">[docs]</a>    <span class="k">def</span> <span class="nf">_update_project_list</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; The PROJECTS_LIST is a list of available projects&#39; hash values.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; The PROJECTS_LIST is a list of available projects&#39; hash values.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">get_value</span><span class="p">(</span><span class="s2">&quot;PROJECTS_LIST&quot;</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">set_value</span><span class="p">(</span><span class="s2">&quot;PROJECTS_LIST&quot;</span><span class="p">,</span> <span class="nb">list</span><span class="p">())</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">projects_list</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">get_value</span><span class="p">(</span><span class="s2">&quot;PROJECTS_LIST&quot;</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="ProjectController.create_project"><a class="viewcode-back" href="../../modules.html#nsaphx.project_controller.ProjectController.create_project">[docs]</a>    <span class="k">def</span> <span class="nf">create_project</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">folder_path</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create a new project and add it to the database. The project is defined by</span>
 <span class="sd">        a folder with a `project.yaml` file inside.</span>
 <span class="sd">    </span>
@@ -181,7 +182,7 @@
     
             
 <div class="viewcode-block" id="ProjectController.connect_to_project"><a class="viewcode-back" href="../../modules.html#nsaphx.project_controller.ProjectController.connect_to_project">[docs]</a>    <span class="k">def</span> <span class="nf">connect_to_project</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">folder_path</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Connect to an existing project defined by a folder with a `project.yaml`</span>
 <span class="sd">        file inside.</span>
 <span class="sd">    </span>
@@ -218,7 +219,7 @@
             <span class="k">return</span> <span class="kc">None</span></div>
         
 <div class="viewcode-block" id="ProjectController.remove_project"><a class="viewcode-back" href="../../modules.html#nsaphx.project_controller.ProjectController.remove_project">[docs]</a>    <span class="k">def</span> <span class="nf">remove_project</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">project_name</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Remove a project from the database, the list of projects, and the</span>
 <span class="sd">        in-memory cache. Run pc.summary() to see the list of projects.  </span>
 
@@ -262,7 +263,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">summary</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="ProjectController.summary"><a class="viewcode-back" href="../../modules.html#nsaphx.project_controller.ProjectController.summary">[docs]</a>    <span class="k">def</span> <span class="nf">summary</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Print the number of available projects with project names. </span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -279,7 +280,7 @@
 
 
 <div class="viewcode-block" id="ProjectController.get_project"><a class="viewcode-back" href="../../modules.html#nsaphx.project_controller.ProjectController.get_project">[docs]</a>    <span class="k">def</span> <span class="nf">get_project</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pr_name</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get a project object from the database.</span>
 
 <span class="sd">        Parameters</span>
