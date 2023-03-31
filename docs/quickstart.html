@@ -21,7 +21,7 @@
     <link rel="author" title="About these documents" href="about.html" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Frequently Asked Questions" href="faq.html" />
+    <link rel="next" title="Plugis" href="plugins.html" />
     <link rel="prev" title="Setting Up Environment" href="setup_env.html" /> 
 </head>
 
@@ -62,6 +62,7 @@
 </li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="plugins.html">Plugis</a></li>
 <li class="toctree-l1"><a class="reference internal" href="faq.html">Frequently Asked Questions</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Developers</span></p>
@@ -69,6 +70,7 @@
 <li class="toctree-l1"><a class="reference internal" href="setup_env_dev.html">Development Environment</a></li>
 <li class="toctree-l1"><a class="reference internal" href="documentation.html">Documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="git_branching.html">Git Branching Model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="how_to_add_plugin.html">How to add plugins</a></li>
 <li class="toctree-l1"><a class="reference internal" href="modules.html">Modules</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Community</span></p>
@@ -126,7 +128,15 @@ pip<span class="w"> </span>install<span class="w"> </span>.
 <section id="create-a-project-controller-instance">
 <h3>Create a project controller instance<a class="headerlink" href="#create-a-project-controller-instance" title="Permalink to this heading"></a></h3>
 <p>The ProjectController is the main controller for the project. In the following we will describe how to use it. All projects can be on the same database. The project controller instance needs a path to the database. The database is a sqlite database. If the database does not exist, it is created automatically.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">nsaphx.project_controller</span> <span class="kn">import</span> <span class="n">ProjectController</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">pc</span> <span class="o">=</span> <span class="n">ProjectController</span><span class="p">(</span><span class="s1">&#39;test_database.sqlite&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
 <p>The <cite>pc</cite> object has a list of available projects on the database. The list is empty at the beginning.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">pc</span><span class="o">.</span><span class="n">summary</span><span class="p">()</span>
+<span class="go">Number of projects in the database: 0</span>
+</pre></div>
+</div>
 </section>
 <section id="create-a-project-instance">
 <h3>Create a project instance<a class="headerlink" href="#create-a-project-instance" title="Permalink to this heading"></a></h3>
@@ -134,23 +144,51 @@ pip<span class="w"> </span>install<span class="w"> </span>.
 <ul class="simple">
 <li><p><cite>name</cite>: The name of the project.</p></li>
 <li><p><cite>id</cite>: The id of the project (any integer number).</p></li>
-<li><p><cite>data</cite>: Which includes following keys:
-- <cite>outcome_path</cite>: The path to the outcome data.
-- <cite>exposure_path</cite>: The path to the exposure data.
-- <cite>covariate_path</cite>: The path to the covariate data.</p></li>
+<li><p><cite>data</cite>: Which includes following keys:</p>
+<ul>
+<li><p><cite>outcome_path</cite>: The path to the outcome data.</p></li>
+<li><p><cite>exposure_path</cite>: The path to the exposure data.</p></li>
+<li><p><cite>covariate_path</cite>: The path to the covariate data.</p></li>
+</ul>
+</li>
 </ul>
 <p>These keys are used to generate a unique hash value for the project. One can add as many as keys as needed. The following is an example of a <cite>project.yaml</cite> file:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cms_heart_failure</span>
+<span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">20221025</span>
+<span class="nt">details</span><span class="p">:</span>
+<span class="w">   </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Computing the effect of longterm pm2.5 exposure on lung cancer.</span>
+<span class="w">   </span><span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.0.0</span>
+<span class="w">   </span><span class="nt">authors</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Naeem Khoshnevis</span>
+<span class="w">      </span><span class="nt">email</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nkhoshnevis@g.harvard.edu</span>
+<span class="nt">data</span><span class="p">:</span>
+<span class="w">   </span><span class="nt">outcome_path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">project_abc/data/outcome.csv</span>
+<span class="w">   </span><span class="nt">exposure_path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">project_abc/data/exposure.csv</span>
+<span class="w">   </span><span class="nt">covariate_path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">project_abc/data/covariate.csv</span>
+</pre></div>
+</div>
 <p>A note on the input data: The input data should have an <cite>id</cite> field that is the same for each observation in the outcome, exposure, and covariate data. All internal connections, and references are based on this <cite>id</cite> field.</p>
 <p>Now we can add the project to the database.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">pc</span><span class="o">.</span><span class="n">create_project</span><span class="p">(</span><span class="n">folder_path</span> <span class="o">=</span> <span class="s2">&quot;project_abc&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">pc</span><span class="o">.</span><span class="n">connect_to_project</span><span class="p">(</span><span class="n">folder_path</span> <span class="o">=</span> <span class="s2">&quot;project_abc&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
 <p>A summary of pc will show the list of available projects.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">pc</span><span class="o">.</span><span class="n">summary</span><span class="p">()</span>
+</pre></div>
+</div>
 <p>Each project has an instance of main data node, which is generated during generating the project instance. Users can get that data node and start applying instructions.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">pr</span> <span class="o">=</span> <span class="n">pc</span><span class="o">.</span><span class="n">get_project</span><span class="p">(</span><span class="n">pr_name</span><span class="o">=</span><span class="s2">&quot;cms_heart_failure&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mdn</span> <span class="o">=</span> <span class="n">pr</span><span class="o">.</span><span class="n">get_data_node</span><span class="p">()</span>
+</pre></div>
+</div>
 </section>
 <section id="apply-instructions">
 <h3>Apply instructions<a class="headerlink" href="#apply-instructions" title="Permalink to this heading"></a></h3>
 <p>User can use any of the available instructions to apply to the data node. Here is the list of available instructions:
 - filter: A plugin that is defined based on filtering mechanism in pandas dataframes.
 - drop_na: A plugin that drops the rows that have missing values.</p>
-<p>Instructions are defined as plugins each plugin has its own required fields and formats. Read more about plugins in <span class="xref std std-ref">How to add plugins section</span>.</p>
+<p>Instructions are defined as plugins each plugin has its own required fields and formats. Read more about plugins in <a class="reference internal" href="how_to_add_plugin.html#how-to-add-plugins"><span class="std std-ref">How to add plugins</span></a>.</p>
 <p>Let’s say we want to apply the <cite>filter</cite> instruction to the data node.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">instruction_1</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;plugin_name&quot;</span><span class="p">:</span> <span class="s2">&quot;filter&quot;</span><span class="p">,</span> <span class="s2">&quot;filter_condition&quot;</span><span class="p">:</span> <span class="s2">&quot;exposure &gt; 2&quot;</span><span class="p">}</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">mdn</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">instruction_1</span><span class="p">)</span>
@@ -176,7 +214,7 @@ pip<span class="w"> </span>install<span class="w"> </span>.
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="setup_env.html" class="btn btn-neutral float-left" title="Setting Up Environment" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="faq.html" class="btn btn-neutral float-right" title="Frequently Asked Questions" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="plugins.html" class="btn btn-neutral float-right" title="Plugis" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

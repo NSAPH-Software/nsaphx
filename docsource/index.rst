@@ -55,6 +55,8 @@ The data nodes are lazy and only computed when necessary. To compute the results
 
    setup_env
    quickstart
+   plugins
+   data_node
    faq
 
 .. toctree::
@@ -65,6 +67,7 @@ The data nodes are lazy and only computed when necessary. To compute the results
    setup_env_dev
    documentation
    git_branching
+   how_to_add_plugin
    modules
 
 .. toctree::
