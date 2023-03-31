@@ -21,8 +21,14 @@ nsaphx
     :target: https://codecov.io/gh/NSAPH-Software/nsaphx
     :alt: codecov
 
-
 *Reproducible Causal Inference Studies*
+
+.. figure:: images/png/big_picture.png
+   :alt: overview
+   :width: 600px
+   :align: center 
+
+|
 
 The nsaphx Python package is designed to support causal inference studies using the potential outcome framework. It offers a flexible and extensible framework for defining and applying computational instructions to input data, including exposure, outcome, and confounders. The package uses directed acyclic graphs and database storage for efficient computation and storage of each object.
 
