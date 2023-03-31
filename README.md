@@ -15,7 +15,7 @@ nsaphx is a Python package designed for causal inference studies under the poten
 pip install nsaphx
 ```
 
-### From source
+### Source
 
 Please note that the package requires Python 3.7 or higher.
 
