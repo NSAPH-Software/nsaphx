@@ -2,16 +2,27 @@
 
 # nsaphx
 
+<img src="docsource/_static/nsaphx_logo.png" alt="Logo" width="200" height="100">
+
+
+
 nsaphx is a Python package designed for causal inference studies under the potential outcome framework. It provides a flexible and extensible framework for defining and applying computational instructions to input data, which should include outcome, exposure, and confounders. The package uses a directed acyclic graph and database storage to ensure efficient computation and storage of each object. Instruction handlers can be easily extended by defining new classes and methods, which can then be used to create new instructions that can be applied to data. Each object is computed only once and stored in the database, ensuring that computation is efficient and data is not duplicated.
 
 ## Installation
 
-TBD
+### PyPI
 
-## Usage
+```bash
+pip install nsaphx
+```
 
-TBD
+### From source
 
-## How it works
+Please note that the package requires Python 3.7 or higher.
 
-TBD
+```bash
+git clone https://github.com/NSAPH-Software/nsaphx
+cd nsaphx
+pip install .
+```
+
