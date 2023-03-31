@@ -1,8 +1,7 @@
 
 
-<img src="docsource/_static/nsaphx_logo.png" alt="Logo" height="100">
+<img src="docsource/_static/nsaphx_logo.png" alt="Logo" height="50">
 
------------------
 
 [![codecov](https://codecov.io/gh/NSAPH-Software/nsaphx/branch/develop/graph/badge.svg?token=8aSueNmHZN)](https://codecov.io/gh/NSAPH-Software/nsaphx)
 
