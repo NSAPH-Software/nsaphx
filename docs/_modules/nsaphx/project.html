@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>nsaphx.project &mdash; nsaphx 0.0.1 documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="author" title="About these documents" href="../../about.html" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            nsaphx
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Introduction</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../about.html">About</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Researchers</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../setup_env.html">Setting Up Environment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../quickstart.html">Quickstart</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../faq.html">Frequently Asked Questions</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developers</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../setup_env_dev.html">Development Environment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../documentation.html">Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../git_branching.html">Git Branching Model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">Modules</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Community</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../contact.html">Contact Us</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../CHANGELOG.html">Developing</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">nsaphx</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">nsaphx.project</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for nsaphx.project</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">project.py</span>
+<span class="sd">================================================</span>
+<span class="sd">The core module for the Project class.</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">yaml</span>
+<span class="kn">import</span> <span class="nn">hashlib</span>
+<span class="kn">from</span> <span class="nn">os</span> <span class="kn">import</span> <span class="n">path</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+
+<span class="kn">from</span> <span class="nn">nsaphx.log</span> <span class="kn">import</span> <span class="n">LOGGER</span>
+<span class="kn">from</span> <span class="nn">nsaphx.database</span> <span class="kn">import</span> <span class="n">Database</span>
+<span class="kn">from</span> <span class="nn">nsaphx.data_node</span> <span class="kn">import</span> <span class="n">MainDataNode</span>
+
+
+<div class="viewcode-block" id="Project"><a class="viewcode-back" href="../../modules.html#nsaphx.project.Project">[docs]</a><span class="k">class</span> <span class="nc">Project</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot; Project Class</span>
+<span class="sd">    The Project class generates a project object with collecting the project&#39;s</span>
+<span class="sd">    details. </span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    project_params : dict</span>
+<span class="sd">    The parameters of the project. It should contain the following mandotary </span>
+<span class="sd">    keys:</span>
+
+<span class="sd">    | name: str</span>
+<span class="sd">    | project_id: int</span>
+<span class="sd">    | data.outcome_path: str</span>
+<span class="sd">    | data.exposure_path: str</span>
+<span class="sd">    | data.covariate_path: str</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    The project object does not load the data. It only stores the paths to the </span>
+<span class="sd">    data. Other than mandatory keys, the project_params can contain other keys. </span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+
+<span class="sd">    &gt;&gt;&gt; from nsaphx.project import Project</span>
+<span class="sd">    &gt;&gt;&gt; project_params = {&quot;name&quot;: &quot;test_project&quot;, &quot;project_id&quot;: 1,</span>
+<span class="sd">                          &quot;data&quot;: {&quot;outcome_path&quot;: &quot;data/outcome.csv&quot;, </span>
+<span class="sd">                                   &quot;exposure_path&quot;: &quot;data/exposure.csv&quot;, </span>
+<span class="sd">                                   &quot;covariate_path&quot;: &quot;data/covariate.csv&quot;}}</span>
+<span class="sd">    &gt;&gt;&gt; project = Project(project_params = project_params, db_path = &quot;test.db&quot;)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">project_params</span><span class="p">,</span> <span class="n">db_path</span><span class="p">):</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">project_params</span> <span class="o">=</span> <span class="n">project_params</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_check_params</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pr_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">project_params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pr_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">project_params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;project_id&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">db_path</span> <span class="o">=</span> <span class="n">db_path</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">hash_value</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">gps_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_add_hash</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">db</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_connect_to_database</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_main_data_node</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_add_main_data_node</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">_check_params</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1">#TODO: In case of raising exceptions, refer the users to the documentation.</span>
+        
+        <span class="n">required_keys</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="s2">&quot;project_id&quot;</span><span class="p">,</span> <span class="s2">&quot;data&quot;</span><span class="p">]</span>
+        <span class="n">required_data_keys</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;outcome_path&quot;</span><span class="p">,</span> <span class="s2">&quot;exposure_path&quot;</span><span class="p">,</span> <span class="s2">&quot;covariate_path&quot;</span><span class="p">]</span>
+
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">required_keys</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">project_params</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;In the project.yaml file, &quot;</span> \
+                                <span class="sa">f</span><span class="s2">&quot;please provide the &#39;</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2">&#39; field.&quot;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">required_data_keys</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">project_params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;data&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;In the project.yaml file, &quot;</span>\
+                                <span class="sa">f</span><span class="s2">&quot;under the &#39;data&#39; field, &quot;</span> \
+                                <span class="sa">f</span><span class="s2">&quot;please provide the &#39;</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2">&#39; field.&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_connect_to_database</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">db_path</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Database is not defined.&quot;</span><span class="p">)</span>
+            
+        <span class="bp">self</span><span class="o">.</span><span class="n">db</span> <span class="o">=</span> <span class="n">Database</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">db_path</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">ping_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># This includes checking if the data is still accessible. </span>
+        <span class="c1"># if the format is supported.</span>
+        <span class="c1"># if each data comes with id column.</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+
+
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+
+        <span class="k">return</span> <span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Project name: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">pr_name</span><span class="si">}</span><span class="s2"> </span><span class="se">\n</span><span class="s2">&quot;</span>
+               <span class="sa">f</span><span class="s2">&quot;Project id: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">pr_id</span><span class="si">}</span><span class="s2"> </span><span class="se">\n</span><span class="s2">&quot;</span>
+               <span class="sa">f</span><span class="s2">&quot;Project database: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">db_path</span><span class="si">}</span><span class="s2"> </span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+
+
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Project(</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">pr_name</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_add_hash</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        
+        <span class="c1"># check the yaml file --------------------------------------------------</span>
+        <span class="k">if</span> <span class="p">(</span><span class="s2">&quot;name&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">project_params</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="ow">or</span> 
+            <span class="bp">self</span><span class="o">.</span><span class="n">project_params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">):</span>
+
+            <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="s2">&quot;Please provide a &#39;name&#39; field&quot;</span>
+                           <span class="o">+</span> <span class="s2">&quot; in the project.yaml file.&quot;</span><span class="p">)</span>
+
+
+        <span class="k">if</span> <span class="p">(</span><span class="s2">&quot;project_id&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">project_params</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="ow">or</span> 
+            <span class="bp">self</span><span class="o">.</span><span class="n">project_params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;project_id&quot;</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">):</span>
+
+            <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="s2">&quot;Please provide a &#39;project_id&#39; field&quot;</span>
+                           <span class="o">+</span> <span class="s2">&quot; in the project.yaml file.&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="s2">&quot;data&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">project_params</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="ow">or</span> 
+            <span class="bp">self</span><span class="o">.</span><span class="n">project_params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;data&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;outcome_path&quot;</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> 
+            <span class="bp">self</span><span class="o">.</span><span class="n">project_params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;data&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;covariate_path&quot;</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">project_params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;data&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;exposure_path&quot;</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">):</span>
+
+            <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="s2">&quot;Please provide the &#39;outcome_path&#39;, &quot;</span> 
+                           <span class="o">+</span> <span class="s2">&quot;&#39;covariate_path&#39;, and &#39;exposure_path&#39; fields in &quot;</span> 
+                           <span class="o">+</span> <span class="s2">&quot; the project.yaml file.&quot;</span><span class="p">)</span>
+
+        <span class="c1"># create a hash string </span>
+        <span class="n">outcome_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">project_params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;data&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;outcome_path&quot;</span><span class="p">)</span>
+        <span class="n">exposure_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">project_params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;data&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;exposure_path&quot;</span><span class="p">)</span>
+        <span class="n">covariate_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">project_params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;data&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;covariate_path&quot;</span><span class="p">)</span>
+
+        <span class="n">outcome_name</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">outcome_path</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">exposure_name</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">exposure_path</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">covariate_name</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">covariate_path</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+        <span class="n">hash_string</span> <span class="o">=</span> <span class="s2">&quot;-&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">project_params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">)),</span> 
+                                <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">project_params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">)),</span> 
+                                <span class="n">outcome_name</span><span class="p">,</span> <span class="n">exposure_name</span><span class="p">,</span> <span class="n">covariate_name</span><span class="p">])</span>
+
+        <span class="k">try</span><span class="p">:</span>            
+            <span class="bp">self</span><span class="o">.</span><span class="n">hash_value</span> <span class="o">=</span>  <span class="n">hashlib</span><span class="o">.</span><span class="n">sha256</span><span class="p">(</span>
+                <span class="n">hash_string</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">))</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">()</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="p">)</span> 
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">project_params</span><span class="p">[</span><span class="s2">&quot;hash_value&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">hash_value</span>
+
+    <span class="k">def</span> <span class="nf">summary</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">gps_list</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="nb">print</span> <span class="p">(</span><span class="s2">&quot;The project does not have any computed GPS object.&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;The project has </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">gps_list</span><span class="p">)</span><span class="si">}</span><span class="s2"> GPS object(s): &quot;</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">gps_list</span><span class="p">:</span>
+                <span class="n">gps</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">get_value</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="n">gps</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Project._add_main_data_node"><a class="viewcode-back" href="../../modules.html#nsaphx.project.Project._add_main_data_node">[docs]</a>    <span class="k">def</span> <span class="nf">_add_main_data_node</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Add the main data node to the database.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_main_data_node</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># Generate main data node and add to the database.</span>
+            <span class="n">main_data_node</span> <span class="o">=</span> <span class="n">MainDataNode</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">project_params</span><span class="p">,</span>
+                                          <span class="n">db_path</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">db_path</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_main_data_node</span> <span class="o">=</span> <span class="n">main_data_node</span><span class="o">.</span><span class="n">hash_value</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">set_value</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_main_data_node</span><span class="p">,</span> <span class="n">main_data_node</span><span class="p">)</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># Retrieve the main data node from the database.</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">set_value</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">hash_value</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>   </div>
+
+    <span class="k">def</span> <span class="nf">get_data_node</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">get_value</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_main_data_node</span><span class="p">)</span></div>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="k">pass</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright Harvard University 2023.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
