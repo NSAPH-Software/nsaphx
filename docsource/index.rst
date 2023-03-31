@@ -1,13 +1,34 @@
 nsaphx
 ======
 
+.. image:: https://img.shields.io/pypi/l/nsaphx.svg
+    :target: https://pypi.org/project/nsaphx
+    :alt: licence
+
 .. image:: https://github.com/nsaph-software/nsaphx/workflows/Python\ package/badge.svg?branch=develop&event=push
     :target: https://github.com/nsaph-software/nsaphx/actions
     :alt: Test Status
 
+.. image:: https://img.shields.io/pypi/v/nsaphx.svg
+    :target: https://pypi.org/project/nsaphx
+    :alt: PyPI version
 
+.. image:: https://img.shields.io/github/issues/nsaph-software/nsaphx
+    :target: https://pypi.org/project/nsaphx
+    :alt: issues
+
+.. image:: https://codecov.io/gh/NSAPH-Software/nsaphx/branch/develop/graph/badge.svg?token=8aSueNmHZN 
+    :target: https://codecov.io/gh/NSAPH-Software/nsaphx
+    :alt: codecov
 
 *Reproducible Causal Inference Studies*
+
+.. figure:: images/png/big_picture.png
+   :alt: overview
+   :width: 600px
+   :align: center 
+
+|
 
 The nsaphx Python package is designed to support causal inference studies using the potential outcome framework. It offers a flexible and extensible framework for defining and applying computational instructions to input data, including exposure, outcome, and confounders. The package uses directed acyclic graphs and database storage for efficient computation and storage of each object.
 
@@ -34,6 +55,8 @@ The data nodes are lazy and only computed when necessary. To compute the results
 
    setup_env
    quickstart
+   plugins
+   data_node
    faq
 
 .. toctree::
@@ -44,6 +67,7 @@ The data nodes are lazy and only computed when necessary. To compute the results
    setup_env_dev
    documentation
    git_branching
+   how_to_add_plugin
    modules
 
 .. toctree::

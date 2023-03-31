@@ -32,6 +32,7 @@
           
           <a href="../../index.html" class="icon icon-home">
             nsaphx
+              <img src="../../_static/nsaphx_logo.png" class="logo" alt="Logo"/>
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -110,7 +111,7 @@
 <span class="kn">from</span> <span class="nn">nsaphx.base.discovery</span> <span class="kn">import</span> <span class="n">Graph</span><span class="p">,</span> <span class="n">Node</span><span class="p">,</span> <span class="n">print_graph</span>
 
 <div class="viewcode-block" id="DataClass"><a class="viewcode-back" href="../../modules.html#nsaphx.data_node.DataClass">[docs]</a><span class="k">class</span> <span class="nc">DataClass</span><span class="p">(</span><span class="n">ABC</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot; DataClass</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; DataClass</span>
 <span class="sd">    The DataClass is an abstract class for the MainDataNode and DataNode classes.</span>
 <span class="sd">    It contains the common attributes and methods for the two classes.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -186,7 +187,7 @@
         <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;    computed: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">computed</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
         
 <div class="viewcode-block" id="MainDataNode"><a class="viewcode-back" href="../../modules.html#nsaphx.data_node.MainDataNode">[docs]</a><span class="k">class</span> <span class="nc">MainDataNode</span><span class="p">(</span><span class="n">DataClass</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot; MainDataNode</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; MainDataNode</span>
 <span class="sd">    The MainDataNode is the first node in the data pipeline. User can apply </span>
 <span class="sd">    instructions to the MainDataNode to generate a new DataNode. Each project</span>
 <span class="sd">    has one MainDataNode object.</span>
@@ -242,7 +243,7 @@
     <span class="k">def</span> <span class="nf">data_summary</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">check_data</span><span class="p">()</span>
         <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_data</span><span class="p">[</span><span class="s2">&quot;path&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s1">&#39;_path&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span><span class="si">}</span><span class="s2">:&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s1">&#39;_path&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">key</span><span class="p">)</span><span class="si">}</span><span class="s2">:&quot;</span><span class="p">)</span>
             <span class="n">key_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
             <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;    Number of rows: </span><span class="si">{</span><span class="n">key_data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
             <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;    Number of columns: </span><span class="si">{</span><span class="n">key_data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
@@ -251,7 +252,7 @@
             <span class="nb">print</span><span class="p">(</span><span class="n">key_data</span><span class="o">.</span><span class="n">head</span><span class="p">())</span>
 
 <div class="viewcode-block" id="MainDataNode.access_data"><a class="viewcode-back" href="../../modules.html#nsaphx.data_node.MainDataNode.access_data">[docs]</a>    <span class="k">def</span> <span class="nf">access_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_name</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;access_data</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;access_data</span>
 <span class="sd">        Access the data in the data node. If data_name is None, return a</span>
 <span class="sd">        dictionary containing all the data. Otherwise, return the data</span>
 <span class="sd">        specified by data_name.</span>
@@ -270,7 +271,7 @@
         <span class="k">if</span> <span class="n">data_name</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">data</span> <span class="o">=</span> <span class="p">{}</span>
             <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_data</span><span class="p">[</span><span class="s2">&quot;path&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-                <span class="n">_key</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s1">&#39;_path&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="n">_key</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s1">&#39;_path&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">key</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
                 <span class="n">loaded_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
                 <span class="n">data</span><span class="p">[</span><span class="n">_key</span><span class="p">]</span> <span class="o">=</span> <span class="n">loaded_data</span>
         <span class="k">else</span><span class="p">:</span>
@@ -279,7 +280,7 @@
         <span class="k">return</span> <span class="n">data</span></div>
 
 <div class="viewcode-block" id="MainDataNode._connect_to_database"><a class="viewcode-back" href="../../modules.html#nsaphx.data_node.MainDataNode._connect_to_database">[docs]</a>    <span class="k">def</span> <span class="nf">_connect_to_database</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;_connect_to_database</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;_connect_to_database</span>
 <span class="sd">        Connect to the database.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">db_path</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -292,7 +293,7 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">get_value</span><span class="p">(</span><span class="n">hash_value</span><span class="p">)</span>
     
 <div class="viewcode-block" id="MainDataNode.check_data"><a class="viewcode-back" href="../../modules.html#nsaphx.data_node.MainDataNode.check_data">[docs]</a>    <span class="k">def</span> <span class="nf">check_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; check_data </span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; check_data </span>
 <span class="sd">        Check if the data files are accessible and print out the file size.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_data</span><span class="p">[</span><span class="s2">&quot;path&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
@@ -304,7 +305,7 @@
                 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;    File size: </span><span class="si">{</span><span class="n">file_size</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="MainDataNode.apply_instruction_chain"><a class="viewcode-back" href="../../modules.html#nsaphx.data_node.MainDataNode.apply_instruction_chain">[docs]</a>    <span class="k">def</span> <span class="nf">apply_instruction_chain</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instruction_list</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;apply_instruction_chain</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;apply_instruction_chain</span>
 <span class="sd">        Apply a list of instructions to the MainDataNode to generate a sequence</span>
 <span class="sd">        of new DataNodes.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -316,7 +317,7 @@
         
 
 <div class="viewcode-block" id="DataNode"><a class="viewcode-back" href="../../modules.html#nsaphx.data_node.DataNode">[docs]</a><span class="k">class</span> <span class="nc">DataNode</span><span class="p">(</span><span class="n">DataClass</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;DataNode</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;DataNode</span>
 <span class="sd">    The DataNode is the basic unit in the data pipeline. User can apply </span>
 <span class="sd">    instructions to the DataNode to generate a new DataNode. Each DataNode</span>
 <span class="sd">    has a parent DataNode and can have one or more decendant DataNodes.</span>
@@ -372,7 +373,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_add_hash</span><span class="p">()</span>
 
 <div class="viewcode-block" id="DataNode._add_hash"><a class="viewcode-back" href="../../modules.html#nsaphx.data_node.DataNode._add_hash">[docs]</a>    <span class="k">def</span> <span class="nf">_add_hash</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;_add_hash</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;_add_hash</span>
 <span class="sd">        Add the hash value and node_id to the node.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">hash_string</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">parent_node_hash</span> <span class="o">+</span> 
@@ -383,7 +384,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">node_id</span> <span class="o">=</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">shake_256</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">hash_value</span><span class="o">.</span><span class="n">encode</span><span class="p">())</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">(</span><span class="mi">8</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="DataNode.compute"><a class="viewcode-back" href="../../modules.html#nsaphx.data_node.DataNode.compute">[docs]</a>    <span class="k">def</span> <span class="nf">compute</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;compute</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;compute</span>
 <span class="sd">        Compute the node. This function will call the plugin function to</span>
 <span class="sd">        compute the node and update the node on the database.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -407,7 +408,7 @@
                   <span class="sa">f</span><span class="s2">&quot;Run .reset() to reset the node.&quot;</span><span class="p">)</span></div>
             
 <div class="viewcode-block" id="DataNode.reset"><a class="viewcode-back" href="../../modules.html#nsaphx.data_node.DataNode.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;reset</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;reset</span>
 <span class="sd">        Reset the node. This function will reset the node to the state before</span>
 <span class="sd">        it is computed.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -415,7 +416,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_update_input_data</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="DataNode._update_input_data"><a class="viewcode-back" href="../../modules.html#nsaphx.data_node.DataNode._update_input_data">[docs]</a>    <span class="k">def</span> <span class="nf">_update_input_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;_update_input_data</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;_update_input_data</span>
 <span class="sd">        Update the input data of the node. This function will get the output</span>
 <span class="sd">        data of the parent node and set it as the input data of the node. The </span>
 <span class="sd">        current node will be updated on the database.</span>
@@ -425,7 +426,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">update_node_on_db</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="DataNode._connect_to_database"><a class="viewcode-back" href="../../modules.html#nsaphx.data_node.DataNode._connect_to_database">[docs]</a>    <span class="k">def</span> <span class="nf">_connect_to_database</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;_connect_to_database</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;_connect_to_database</span>
 <span class="sd">        Connect to the database.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">db_path</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -434,13 +435,13 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">db</span> <span class="o">=</span> <span class="n">Database</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">db_path</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="DataNode.update_node_on_db"><a class="viewcode-back" href="../../modules.html#nsaphx.data_node.DataNode.update_node_on_db">[docs]</a>    <span class="k">def</span> <span class="nf">update_node_on_db</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;update_node_on_db </span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;update_node_on_db </span>
 <span class="sd">        Update the node on the database.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">set_value</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">hash_value</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span></div>
     
 <div class="viewcode-block" id="DataNode.check_data"><a class="viewcode-back" href="../../modules.html#nsaphx.data_node.DataNode.check_data">[docs]</a>    <span class="k">def</span> <span class="nf">check_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;check_data</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;check_data</span>
 <span class="sd">        Check the data of the node. This function will check if the data</span>
 <span class="sd">        files are accessible and print out the file size.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -453,7 +454,7 @@
                 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;    File size: </span><span class="si">{</span><span class="n">file_size</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="DataNode.access_input_data"><a class="viewcode-back" href="../../modules.html#nsaphx.data_node.DataNode.access_input_data">[docs]</a>    <span class="k">def</span> <span class="nf">access_input_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_name</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;access_input_data</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;access_input_data</span>
 <span class="sd">        Access the input data of the node. This function will load the data</span>
 <span class="sd">        from the data files and return a dictionary containing the data.</span>
 
@@ -466,7 +467,7 @@
         <span class="k">if</span> <span class="n">data_name</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">data</span> <span class="o">=</span> <span class="p">{}</span>
             <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_data</span><span class="p">[</span><span class="s2">&quot;path&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-                <span class="n">_key</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s1">&#39;_path&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="n">_key</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s1">&#39;_path&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">key</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
                 <span class="n">loaded_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
                 <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_data</span><span class="p">[</span><span class="s2">&quot;d_index&quot;</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                     <span class="n">selected_data</span> <span class="o">=</span> <span class="n">loaded_data</span><span class="p">[</span><span class="n">loaded_data</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">input_data</span><span class="p">[</span><span class="s2">&quot;d_index&quot;</span><span class="p">])]</span>
@@ -479,7 +480,7 @@
         <span class="k">return</span> <span class="n">data</span></div>
 
 <div class="viewcode-block" id="DataNode.access_output_data"><a class="viewcode-back" href="../../modules.html#nsaphx.data_node.DataNode.access_output_data">[docs]</a>    <span class="k">def</span> <span class="nf">access_output_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_name</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;access_output_data</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;access_output_data</span>
 <span class="sd">        Access the output data of the node. This function will load the data</span>
 <span class="sd">        from the data files and return a dictionary containing the data.</span>
 
@@ -492,7 +493,7 @@
         <span class="k">if</span> <span class="n">data_name</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">data</span> <span class="o">=</span> <span class="p">{}</span>
             <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_data</span><span class="p">[</span><span class="s2">&quot;path&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-                <span class="n">_key</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s1">&#39;_path&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="n">_key</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s1">&#39;_path&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">key</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
                 <span class="n">loaded_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
                 <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_data</span><span class="p">[</span><span class="s2">&quot;d_index&quot;</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                     <span class="n">selected_data</span> <span class="o">=</span> <span class="n">loaded_data</span><span class="p">[</span>

@@ -52,6 +52,8 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="setup_env.html">Setting Up Environment</a></li>
 <li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quickstart</a></li>
+<li class="toctree-l1"><a class="reference internal" href="plugins.html">Plugis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="data_node.html">Data Node</a></li>
 <li class="toctree-l1"><a class="reference internal" href="faq.html">Frequently Asked Questions</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Developers</span></p>
@@ -59,6 +61,7 @@
 <li class="toctree-l1"><a class="reference internal" href="setup_env_dev.html">Development Environment</a></li>
 <li class="toctree-l1"><a class="reference internal" href="documentation.html">Documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="git_branching.html">Git Branching Model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="how_to_add_plugin.html">How to add plugins</a></li>
 <li class="toctree-l1"><a class="reference internal" href="modules.html">Modules</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Community</span></p>
@@ -93,8 +96,18 @@
              
   <section id="nsaphx">
 <h1>nsaphx<a class="headerlink" href="#nsaphx" title="Permalink to this heading"></a></h1>
+<a class="reference external image-reference" href="https://pypi.org/project/nsaphx"><img alt="licence" src="https://img.shields.io/pypi/l/nsaphx.svg" /></a>
 <a class="reference external image-reference" href="https://github.com/nsaph-software/nsaphx/actions"><img alt="Test Status" src="https://github.com/nsaph-software/nsaphx/workflows/Python package/badge.svg?branch=develop&amp;event=push" /></a>
+<a class="reference external image-reference" href="https://pypi.org/project/nsaphx"><img alt="PyPI version" src="https://img.shields.io/pypi/v/nsaphx.svg" /></a>
+<a class="reference external image-reference" href="https://pypi.org/project/nsaphx"><img alt="issues" src="https://img.shields.io/github/issues/nsaph-software/nsaphx" /></a>
+<a class="reference external image-reference" href="https://codecov.io/gh/NSAPH-Software/nsaphx"><img alt="codecov" src="https://codecov.io/gh/NSAPH-Software/nsaphx/branch/develop/graph/badge.svg?token=8aSueNmHZN" /></a>
 <p><em>Reproducible Causal Inference Studies</em></p>
+<figure class="align-center">
+<a class="reference internal image-reference" href="_images/big_picture.png"><img alt="overview" src="_images/big_picture.png" style="width: 600px;" /></a>
+</figure>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
 <p>The nsaphx Python package is designed to support causal inference studies using the potential outcome framework. It offers a flexible and extensible framework for defining and applying computational instructions to input data, including exposure, outcome, and confounders. The package uses directed acyclic graphs and database storage for efficient computation and storage of each object.</p>
 <p>The instruction handlers in the package can be easily extended by defining new classes and methods, enabling users to create new instructions that can be applied to data. Each object is computed only once and stored in the database to prevent duplication of data and ensure efficiency.</p>
 <p>At the core of the package is the project controller (PC), which is based on a connected database. The PC can retrieve previously computed projects or add new ones, and can manage zero or more projects. Each project is defined by a connection to a project folder containing a project.yaml file.</p>
@@ -116,9 +129,14 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quickstart</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="quickstart.html#installing-the-package">Installing the Package</a></li>
-<li class="toctree-l2"><a class="reference internal" href="quickstart.html#the-whole-game">The Whole Game</a></li>
+<li class="toctree-l2"><a class="reference internal" href="quickstart.html#usage">Usage</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="plugins.html">Plugis</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="plugins.html#implemented-plugins">Implemented plugins</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="data_node.html">Data Node</a></li>
 <li class="toctree-l1"><a class="reference internal" href="faq.html">Frequently Asked Questions</a></li>
 </ul>
 </div>
@@ -135,6 +153,7 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="documentation.html">Documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="git_branching.html">Git Branching Model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="how_to_add_plugin.html">How to add plugins</a></li>
 <li class="toctree-l1"><a class="reference internal" href="modules.html">Modules</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="modules.html#database-py">database.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="modules.html#project-controller-py">project_controller.py</a></li>
